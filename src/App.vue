@@ -1,7 +1,25 @@
 <template>
     <div id="app">
         <h1>Problema de Monty Hall</h1>
-        <DoorVue number="1" :has-gift="false"/>
+        <div class="form">
+            <div v-if="!started">
+                <label for="portsAmount">Quantas Portas?</label>
+                <input type="text" id="portsAmount" size="3" 
+                    v-model.number="portsAmount">
+            </div>
+            <div v-if="!started">
+                <label for="selectedPort">Qual porta é premiada</label>
+                <input type="text" id="selectedPort" size="3" 
+                    v-model.number="selectedPort">
+            </div>
+            <button v-if="!started" @click="started = true">Iniciar</button>
+            <button v-if="started" @click="started = false">Reiniciar</button>
+        </div>
+        <div class="DoorVue" v-if="started">
+            <div v-for="i in portsAmount" :key="i">
+                <DoorVue :has-gift="i === selectedPort" :number="i"/>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -12,7 +30,14 @@ import DoorVue from './components/DoorVue.vue';
 
 export default {
     name: "app",
-    components: { DoorVue }
+    components: { DoorVue },
+    data: function() {
+        return {
+            started: false,
+            portsAmount: 3,
+            selectedPort: null
+        }
+    }
 }
 </script>
 
@@ -35,5 +60,25 @@ export default {
         background-color: #0004;
         padding: 20px;
         margin-bottom: 60px;
+    }
+
+    .form {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center; 
+       margin-bottom: 40px;
+    }
+
+    .form, .form input, .form button {
+        margin-bottom: 10px;
+        font-size: 2rem;
+    }
+
+    .DoorVue {
+        align-self: stretch;
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
     }
 </style>
